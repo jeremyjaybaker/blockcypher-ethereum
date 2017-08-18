@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Blockcypher::Ethereum::DynamicObjects do
-  let(:test_api) { Blockcypher::Ethereum::API.new(use_test_env: true) }
+  let(:test_api) { Blockcypher::Ethereum::API.new(use_test_env: true, api_token: '27a5e7d3f7eb46f69f9b0d9b4951476e') }
 
   describe 'initialization/declaration' do
     it 'can define dynamic object classes' do
@@ -20,10 +20,10 @@ RSpec.describe Blockcypher::Ethereum::DynamicObjects do
   end
 
   describe 'custom actions' do
-    let(:faucet) { test_api.faucet }
+    let(:faucet) { test_api.faucet(address: 'eb4e8bdecc1e10c98b80bb2a5d582196a554713f') }
 
     it 'can define methods from the action definitions' do
-      res = faucet.add_wei(1000)
+      res = faucet.add_wei(amount: 100)
       expect(res.sucessful?).to be true
     end
 

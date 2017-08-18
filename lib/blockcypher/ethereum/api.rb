@@ -12,7 +12,8 @@ module Blockcypher
 
           Blockcypher::Ethereum::DynamicObjects.instantiate_object(name, definition, number)
 
-          # Define an accessor method on this API class itself that initializes each object
+          # Define an accessor method on this API class itself that initializes the
+          # newly-defined object.
           define_method name do |**args|
             class_name = "Blockcypher::Ethereum::V#{@version}::#{name.to_s.titleize}"
             class_name.constantize.new(object_params(args))

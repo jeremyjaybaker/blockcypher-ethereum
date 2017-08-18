@@ -23,8 +23,8 @@ module Blockcypher
             # assembling the request data, and making the request.
             define_method method_name do |**args|
               url = action_endpoint(method_name)
-              request_params(method_def[:params], args)
-              Blockcypher::Ethereum::Request.new(url, request_params, method_def[:type]).call
+              params = request_params(method_def[:params], args)
+              Blockcypher::Ethereum::Request.new(url, params, method_def[:type]).call
             end
 
             # Helper method for asking the method if it can only be called in the testnet or not.
@@ -41,8 +41,8 @@ module Blockcypher
             end
 
             def action_endpoint(action)
-              path_ext = action_definitions[action][:path_extension]
-              super(path_ext, #{name})
+              path_ext = action_definitions.first[action][:path_extension]
+              super(path_ext, '#{name}')
             end
           RUBY
         end

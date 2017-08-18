@@ -13,6 +13,7 @@ module Blockcypher
 
         # Any child arguments given are sent directly to the child's accessors. This will
         # almost definitely break if not called within a child class.
+        byebug
         args.each{ |k,v| send("#{k}=", v) }
       end
 
@@ -25,6 +26,7 @@ module Blockcypher
         network = @use_test_env ? 'test' : 'main'
         base_url = "https://api.blockcypher.com/v#{@version}/beth/#{network}/"
 
+        byebug
         "#{base_url}#{obj_name.to_s}#{path_ext}?token=#{@api_token}"
       end
 
