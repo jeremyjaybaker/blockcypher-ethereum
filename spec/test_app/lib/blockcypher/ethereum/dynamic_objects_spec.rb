@@ -1,7 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe Blockcypher::Ethereum::DynamicObjects do
-  let(:test_api) { Blockcypher::Ethereum::API.new(use_test_env: true, api_token: '27a5e7d3f7eb46f69f9b0d9b4951476e') }
+  let(:api_key) { Rails.application.secrets['BLOCKCYPHER_API_KEY'] }
+  let(:test_api) { Blockcypher::Ethereum::API.new(use_test_env: true, api_token: api_key) }
 
   describe 'initialization/declaration' do
     it 'can define dynamic object classes' do
@@ -24,10 +25,13 @@ RSpec.describe Blockcypher::Ethereum::DynamicObjects do
 
     it 'can define methods from the action definitions' do
       res = faucet.add_wei(amount: 100)
-      expect(res.sucessful?).to be true
+      expect(res.success?).to be true
     end
 
     it 'can determine if an action can only be run in the testnet' do
+      expect(faucet.add_wei_is_testnet_only?).to be true
     end
   end
+
+  # TODO: Not sure how to write good test code for dynamic code.
 end

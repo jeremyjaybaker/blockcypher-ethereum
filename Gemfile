@@ -10,10 +10,6 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'byebug'
   gem 'test-unit'
-
-  # janky fix for Rspec issue
-  # gem 'devise', git: 'https://github.com/gogovan/devise.git', branch: 'rails-5.1'
-  # gem 'erubis'
 end
 
 # Declare any dependencies that are still in development here instead of in

@@ -1,6 +1,11 @@
 module Blockcypher
   module Ethereum
     class API
+
+      # The primary class through which most API interaction will occur through.
+      # Each instance of this class has initializers for all defined API objects
+      # which can then call the various actions associated with each object.
+
       attr_accessor :use_test_env, :api_token, :version, :my_address
       VERSION_LIST = [1].freeze
       DEFAULT_VERSION = 1.freeze
