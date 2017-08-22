@@ -5,31 +5,28 @@ module Blockcypher
       # DynamicObjects is responsible for instantiating classes that represent objects
       # in the Ethereum API. A single class is defined for each API object and version.
       #
-      # The object definitions themselves are location in the
+      # The object object_defs themselves are location in the
       # Blockcypher::Ethereum::APIDefinitions::V_::OBJECTS series of modules where _ is
       # the API version number.
 
-      def self.instantiate_object(name, definition, version)
-        class_name = "Blockcypher::Ethereum::V#{version}::#{name.to_s.singularize.titleize}"
+      def self.instantiate_class(object_name, object_def, version)
+        class_name = "Blockcypher::Ethereum::V#{version}::#{object_name.to_s.titleize.gsub(' ','')}"
 
         # New class declaration w/ accessors
         eval <<-RUBY
           class #{class_name} < Blockcypher::Ethereum::DynamicObject
-            attr_accessor #{definition[:attributes].to_s[1..-2]}
+            attr_accessor #{object_def[:attributes].to_s[1..-2]}
+            attr_reader #{object_def[:return_only_attributes].to_s[1..-2]}
           end
         RUBY
 
         # Injecting methods into the new class
         class_name.constantize.class_eval do
 
-          # Define the methods specified in the actions definition.
-          definition[:actions].each do |method_name, method_def|
-            # The actual method definition. It simply boils down to determining the endpoint,
-            # assembling the request data, and making the request.
+          # Define the methods specified in the actions object_def.
+          object_def[:actions].each do |method_name, method_def|
             define_method method_name do |**args|
-              url = action_endpoint(method_name)
-              params = default_action_params(method_def[:params]).merge(args)
-              Blockcypher::Ethereum::Request.new(url, params, method_def[:type]).call
+              send_request(method_name, attributes.merge(args))
             end
 
             # Helper method for asking the method if it can only be called in the testnet or not.
@@ -40,26 +37,9 @@ module Blockcypher
 
           private
 
-          define_method :action_definitions do
-            definition[:actions]
-          end
-
-          # Determines this object's name and passes it to it's parent method.
-          # Basically the same as it's parent method but with one input argument
-          # automatically calculated.
-          define_method :action_endpoint do |action|
-            path_ext = definition[:actions][action][:path_extension]
-            super(path_ext, name)
-          end
-
-          # Examines an object's parameters definition and evaluates
-          # all Procs within this local context.
-          # These can be overridden by values passed to the method during runtime.
-          def default_action_params(hash)
-            hash.each do |k,v|
-              hash[k] = instance_exec(&v) if v.instance_of? Proc
-            end
-          end
+          define_method(:version)     { version }
+          define_method(:object_def)  { object_def }
+          define_method(:object_name) { object_name }
         end
       end
     end

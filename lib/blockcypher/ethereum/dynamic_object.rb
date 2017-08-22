@@ -1,37 +1,57 @@
+require 'faraday'
+
 module Blockcypher
   module Ethereum
     class DynamicObject
+      include APIState
 
-      # A DynamicObject provides the foundation for all objects that are
-      # created via the DynamicObjects module. It's not meant to be instantiated
-      # on it's own.
-
-      attr_accessor :api_token, :use_test_env, :version
-
-      # All dynamic objects should know the state of the API that they're representing like
-      # version, api key, etc. Additional arguments usually need to be provided via the double
-      # splat.
-      def initialize(api_token: ENV['BLOCKCYPHER_API_KEY'],
-                     use_test_env: false,
-                     version: Blockcypher::Ethereum::API::DEFAULT_VERSION,
-                     **args)
-        @api_token = api_token
-        @use_test_env = use_test_env
-        @version = version
-
+      def initialize(state, **args)
+        set_api_state(state)
         args.each{ |k,v| send("#{k}=", v) }
       end
 
       private
 
-      # Determines the API endpoint for both the object and the given action. If the
-      # object has no action/path extension, that part is left out.
-      def action_endpoint(path_ext, obj_name)
-        path_ext.present? ? "/#{path_ext}" : ''
-        network = @use_test_env ? 'test' : 'main'
-        base_url = "https://api.blockcypher.com/v#{@version}/beth/#{network}/"
+      def request_params(method_name, args)
+        object_def[:actions][method_name][:param_type] == :path ? {} : attributes.merge(args).to_json
+      end
 
-        "#{base_url}#{obj_name.to_s}#{path_ext}?token=#{@api_token}"
+      def send_request(method_name, params)
+        url = endpoint(method_name, params)
+        res = Faraday.new.send(request_type(method_name), url, request_params(method_name, params))
+        raise InvalidRequest.new(res) if res.status.to_s =~ /[45]\d{2}/
+
+        Blockcypher::Ethereum::Response.new(api_state, res, return_type(method_name))
+      end
+
+      def return_type(method_name)
+        object_def[:actions][method_name][:return_type]
+      end
+
+      def request_type(method_name)
+        object_def[:actions][method_name][:type]
+      end
+
+      def endpoint(method_name, params)
+        Blockcypher::Ethereum::Endpoint.new(api_state, object_name, method_name, params).url
+      end
+
+      def attributes
+        object_def[:attributes].map do |attr|
+          { attr => instance_variable_get("@#{attr}") }
+        end.reduce(:merge)
+      end
+
+      def version
+        raise 'This class must be overridden in it\'s child class.'
+      end
+
+      def object_def
+        raise 'This class must be overridden in it\'s child class.'
+      end
+
+      def object_name
+        raise 'This class must be overridden in it\'s child class.'
       end
     end
   end

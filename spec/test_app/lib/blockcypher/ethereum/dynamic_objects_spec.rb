@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Blockcypher::Ethereum::DynamicObjects do
   let(:api_key) { Rails.application.secrets['BLOCKCYPHER_API_KEY'] }
-  let(:test_api) { Blockcypher::Ethereum::API.new(use_test_env: true, api_token: api_key) }
+  let(:test_api) { Blockcypher::Ethereum::API.new(use_testnet: true, api_token: api_key) }
 
   describe 'initialization/declaration' do
     it 'can define dynamic object classes' do

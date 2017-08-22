@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 RSpec.describe Blockcypher::Ethereum::Response do
-  describe 'struct building' do
-    it 'sets the str' do
+  describe 'basic attributes' do
+    it 'can return the response status' do
 
     end
   end

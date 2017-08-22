@@ -1,0 +1,221 @@
+{
+  "faucet": {
+    "attributes": [ "address" ],
+    "actions": {
+      "add_wei": {
+        "path_extension": "$OBJ",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": true,
+        "params": [ "address", "amount" ],
+        "return_type": "data"
+      }
+    }
+  },
+  "address": {
+    "resource_name": "addrs",
+    "attributes": [
+      "address",
+      "total_received",
+      "total_sent",
+      "balance",
+      "unconfirmed_balance",
+      "final_balance",
+      "n_tx",
+      "unconfirmed_n_tx",
+      "final_n_tx",
+      "tx_url",
+      "txrefs",
+      "unconfirmed_txrefs",
+      "hasMore"
+    ],
+    "actions": {
+      "balance": {
+        "path_extension": "$OBJS/$ADDRESS/$ACTION",
+        "uses_token": false,
+        "type": "get",
+        "testnet_only": false,
+        "params": [ "address" ],
+        "return_type": "address"
+      },
+      "retrieve": {
+        "path_extension": "$OBJS/$ADDRESS",
+        "uses_token": false,
+        "type": "get",
+        "testnet_only": false,
+        "params": [
+          "before",
+          "after",
+          "limit",
+          "confirmations"
+        ],
+        "return_type": "address"
+      },
+      "create": {
+        "path_extension": "$OBJS",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [],
+        "return_type": "address_keychain"
+      }
+    }
+  },
+  "address_keychain": {
+    "resource_name": "addr",
+    "attributes": [
+      "address",
+      "public",
+      "private"
+    ],
+    "actions": {}
+  },
+  "block": {
+    "attributes": [
+      "hash",
+      "height",
+      "depth",
+      "chain",
+      "total",
+      "fees",
+      "size",
+      "ver",
+      "time",
+      "received_time",
+      "coinbase_addr",
+      "relayed_by",
+      "nonce",
+      "n_tx",
+      "prev_block",
+      "prev_block_url",
+      "tx_url",
+      "internal_ids",
+      "next_txids",
+      "next_internal_ids",
+      "uncles"
+    ],
+    "actions": {
+      "retrieve_by_hash": {
+        "path_extension": "",
+        "uses_token": false,
+        "param_type": "path",
+        "type": "get",
+        "testnet_only": false,
+        "params": [
+          "block_hash",
+          "txstart",
+          "limit"
+        ],
+        "return_type": "block"
+      },
+      "retrieve_by_height": {
+        "path_extension": "",
+        "uses_token": false,
+        "param_type": "path",
+        "type": "get",
+        "testnet_only": false,
+        "params": [
+          "block_height",
+          "txstart",
+          "limit"
+        ],
+        "return_type": "block"
+      }
+    }
+  },
+  "tx": {
+    "attributes": [
+      "block_height",
+      "hash",
+      "addresses",
+      "total",
+      "fees",
+      "size",
+      "gas_used",
+      "gas_price",
+      "relayed_by",
+      "received",
+      "ver",
+      "double_spend",
+      "vin_sz",
+      "vout_sz",
+      "confirmations",
+      "inputs",
+      "outputs",
+      "internal_txids",
+      "parent_tx",
+      "confirmed",
+      "gas_limit",
+      "contract_creation",
+      "receive_count",
+      "block_hash",
+      "block_index",
+      "double_of",
+      "execution_error"
+    ],
+    "return_only_attributes": [
+      "confidence"
+    ],
+    "actions": {
+      "retrieve": {
+        "path_extension": "$OBJS/$HASH",
+        "uses_token": false,
+        "param_type": "path",
+        "type": "get",
+        "testnet_only": false,
+        "params": [ "tx_hash" ],
+        "return_type": "tx"
+      },
+      "unconfirmed": {
+        "path_extension": "$OBJS",
+        "uses_token": false,
+        "param_type": "path",
+        "type": "get",
+        "testnet_only": false,
+        "params": {},
+        "return_type": "data"
+      },
+      "build": {
+        "path_extension": "$OBJS/new",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [ "tx" ],
+        "return_type": "txskeleton"
+      },
+      "save": {
+        "path_extension": "send",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [ "tx_skeleton" ],
+        "return_type": "txskeleton"
+      },
+      "decode": {
+        "path_extension": "decode",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [ "tx_hex" ],
+        "return_type": "tx"
+      },
+      "push": {
+        "path_extension": "push",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [ "tx_hex" ],
+        "return_type": "tx"
+      }
+    }
+  },
+  "txskeleton": {
+    "attributes": [
+      "tx",
+      "tosign",
+      "signatures",
+      "errors"
+    ],
+    "actions": {}
+  }
+}
