@@ -35,6 +35,20 @@ module Blockcypher
             end
           end
 
+          def actions
+            object_def[:actions].keys
+          end
+
+          def actions_info
+            object_def[:actions].map{ |k,v| { k => (v[:description] || 'No description given')} }
+          end
+
+          def pretty_print_actions_info
+            actions_info.each do |action|
+              puts "##{action.keys.first}\n    #{action.values.first}"
+            end
+          end
+
           private
 
           define_method(:version)     { version }

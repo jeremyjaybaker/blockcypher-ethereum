@@ -1,74 +1,30 @@
 {
-  "faucet": {
-    "attributes": [ "address" ],
-    "actions": {
-      "add_wei": {
-        "path_extension": "$OBJ",
-        "uses_token": true,
-        "type": "post",
-        "testnet_only": true,
-        "params": [ "address", "amount" ],
-        "return_type": "data"
-      }
-    }
-  },
-  "address": {
-    "resource_name": "addrs",
+  "blockchain": {
     "attributes": [
-      "address",
-      "total_received",
-      "total_sent",
-      "balance",
-      "unconfirmed_balance",
-      "final_balance",
-      "n_tx",
-      "unconfirmed_n_tx",
-      "final_n_tx",
-      "tx_url",
-      "txrefs",
-      "unconfirmed_txrefs",
-      "hasMore"
+      "name",
+      "height",
+      "hash",
+      "time",
+      "latest_url",
+      "previous_hash",
+      "previous_url",
+      "unconfirmed_count",
+      "high_gas_price",
+      "medium_gas_price",
+      "low_gas_price",
+      "last_fork_height",
+      "last_fork_hash"
     ],
     "actions": {
-      "balance": {
-        "path_extension": "$OBJS/$ADDRESS/$ACTION",
+      "get": {
+        "description": "General information about the Ethereum blockchain.",
         "uses_token": false,
         "type": "get",
-        "testnet_only": false,
-        "params": [ "address" ],
-        "return_type": "address"
-      },
-      "retrieve": {
-        "path_extension": "$OBJS/$ADDRESS",
-        "uses_token": false,
-        "type": "get",
-        "testnet_only": false,
-        "params": [
-          "before",
-          "after",
-          "limit",
-          "confirmations"
-        ],
-        "return_type": "address"
-      },
-      "create": {
-        "path_extension": "$OBJS",
-        "uses_token": true,
-        "type": "post",
         "testnet_only": false,
         "params": [],
-        "return_type": "address_keychain"
+        "return_type": "blockchain"
       }
     }
-  },
-  "address_keychain": {
-    "resource_name": "addr",
-    "attributes": [
-      "address",
-      "public",
-      "private"
-    ],
-    "actions": {}
   },
   "block": {
     "attributes": [
@@ -157,7 +113,7 @@
       "confidence"
     ],
     "actions": {
-      "retrieve": {
+      "get": {
         "path_extension": "$OBJS/$HASH",
         "uses_token": false,
         "param_type": "path",
@@ -183,7 +139,7 @@
         "params": [ "tx" ],
         "return_type": "txskeleton"
       },
-      "save": {
+      "send": {
         "path_extension": "send",
         "uses_token": true,
         "type": "post",
@@ -196,7 +152,7 @@
         "uses_token": true,
         "type": "post",
         "testnet_only": false,
-        "params": [ "tx_hex" ],
+        "params": [ "tx" ],
         "return_type": "tx"
       },
       "push": {
@@ -204,12 +160,29 @@
         "uses_token": true,
         "type": "post",
         "testnet_only": false,
-        "params": [ "tx_hex" ],
+        "params": [ "tx" ],
         "return_type": "tx"
       }
     }
   },
-  "txskeleton": {
+  "tx_ref": {
+    "resource_name": "txref",
+    "attributes": [
+      "block_height",
+      "tx_hash",
+      "tx_input_n",
+      "tx_output_n",
+      "value",
+      "double_spend",
+      "confirmations",
+      "ref_balance",
+      "confirmed",
+      "double_of"
+    ],
+    "actions": {}
+  },
+  "tx_skeleton": {
+    "resource_name": "txskeleton",
     "attributes": [
       "tx",
       "tosign",
@@ -217,5 +190,77 @@
       "errors"
     ],
     "actions": {}
+  },
+  "address": {
+    "resource_name": "addrs",
+    "attributes": [
+      "address",
+      "total_received",
+      "total_sent",
+      "balance",
+      "unconfirmed_balance",
+      "final_balance",
+      "n_tx",
+      "unconfirmed_n_tx",
+      "final_n_tx",
+      "tx_url",
+      "txrefs",
+      "unconfirmed_txrefs",
+      "hasMore"
+    ],
+    "actions": {
+      "balance": {
+        "path_extension": "$OBJS/$ADDRESS/$ACTION",
+        "uses_token": false,
+        "type": "get",
+        "testnet_only": false,
+        "params": [ "address" ],
+        "return_type": "address"
+      },
+      "retrieve": {
+        "path_extension": "$OBJS/$ADDRESS",
+        "uses_token": false,
+        "type": "get",
+        "testnet_only": false,
+        "params": [
+          "before",
+          "after",
+          "limit",
+          "confirmations"
+        ],
+        "return_type": "address"
+      },
+      "create": {
+        "path_extension": "$OBJS",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": false,
+        "params": [],
+        "return_type": "address_keychain"
+      }
+    }
+  },
+  "address_keychain": {
+    "resource_name": "addr",
+    "attributes": [
+      "address",
+      "public",
+      "private"
+    ],
+    "actions": {}
+  },
+  "faucet": {
+    "attributes": [ "address" ],
+    "actions": {
+      "add_wei": {
+        "description": "Adds wei to testnet addresses.",
+        "path_extension": "$OBJ",
+        "uses_token": true,
+        "type": "post",
+        "testnet_only": true,
+        "params": [ "address", "amount" ],
+        "return_type": "data"
+      }
+    }
   }
 }

@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'blockcypher/ethereum/cli'
+
+Blockcypher::Ethereum::CLI.start

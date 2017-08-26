@@ -33,5 +33,16 @@ RSpec.describe Blockcypher::Ethereum::DynamicObjects do
     end
   end
 
-  # TODO: Not sure how to write good test code for dynamic code.
+  describe 'action info helpers' do
+    let(:faucet) { test_api.faucet(address: 'eb4e8bdecc1e10c98b80bb2a5d582196a554713f') }
+
+    it 'can print action descriptions as a hash' do
+      expect(faucet.actions_info).to be_instance_of Hash
+    end
+
+    it 'can print action descriptions in a human-readable format' do
+      expect_any_instance_of(Blockcypher::Ethereum::V1::Faucet).to receive(:puts)
+      faucet.pretty_print_actions_info
+    end
+  end
 end

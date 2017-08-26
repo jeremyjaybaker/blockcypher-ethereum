@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 5.1.3"
   s.add_dependency "faraday"
+  s.add_dependency "thor"
 
   s.add_development_dependency "sqlite3"
+  s.executables << 'blockcypher-ethereum'
 end
