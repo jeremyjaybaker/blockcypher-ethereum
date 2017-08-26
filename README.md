@@ -1,25 +1,11 @@
 # Blockcypher::Ethereum
-Short description and motivation.
+A wrapper for Blockcypher's Ethereum API (https://www.blockcypher.com/dev/ethereum/). I made this since Blockcypher is still working on their official Ethereum API wrapper. I also wanted to experiment with an API wrapper who's essential functionality could be defined exclusively with json.
 
 ## Usage
-How to use my plugin.
+TDB
 
 ## Installation
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'blockcypher-ethereum'
-```
-
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install blockcypher-ethereum
-```
+Add `blockcypher-ethereum` to your Gemfile and run `bundle exec blockcypher-ethereum install`.
 
 ## Contributing
 Contribution directions go here.
